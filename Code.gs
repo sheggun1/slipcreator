@@ -58,3 +58,10 @@ function saveCloudSettings(settings){
   return {ok:true,settings:getCloudSettings()};
 }
 function getCloudStatus(){const ss=db_();return {ok:true,spreadsheetName:ss.getName(),records:getCloudRecords().records.length,spreadsheetUrl:ss.getUrl(),user:Session.getEffectiveUser().getEmail()||'Authorized account'};}
+
+function appPasswordHash_(password,salt){return Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,salt+'|'+password));}
+function authProps_(){return PropertiesService.getScriptProperties();}
+function appPasswordConfigured(){return {configured:!!authProps_().getProperty('SLIPCREATOR_PASS_HASH')};}
+function setupAppPassword(password){const p=authProps_();if(p.getProperty('SLIPCREATOR_PASS_HASH'))throw new Error('Password is already configured.');if(!password||String(password).length<8)throw new Error('Password must be at least 8 characters.');const salt=Utilities.getUuid();p.setProperties({SLIPCREATOR_PASS_SALT:salt,SLIPCREATOR_PASS_HASH:appPasswordHash_(String(password),salt)});return {ok:true};}
+function verifyAppPassword(password){const p=authProps_();const salt=p.getProperty('SLIPCREATOR_PASS_SALT'),hash=p.getProperty('SLIPCREATOR_PASS_HASH');if(!salt||!hash)return {ok:false,unconfigured:true};return {ok:appPasswordHash_(String(password||''),salt)===hash};}
+function changeAppPassword(oldPassword,newPassword){if(!newPassword||String(newPassword).length<8)throw new Error('New password must be at least 8 characters.');if(!verifyAppPassword(oldPassword).ok)throw new Error('Current password is incorrect.');const p=authProps_(),salt=Utilities.getUuid();p.setProperties({SLIPCREATOR_PASS_SALT:salt,SLIPCREATOR_PASS_HASH:appPasswordHash_(String(newPassword),salt)});return {ok:true};}
