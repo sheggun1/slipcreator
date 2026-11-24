@@ -1,0 +1,5 @@
+// Add inside existing doGet(e), after params is declared and before API health response:
+if (params.page === 'slipcreator') {
+  return HtmlService.createHtmlOutputFromFile('SlipCreator')
+    .setTitle('GTMC Parent Login Slip Generator');
+}
