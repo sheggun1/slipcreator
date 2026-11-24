@@ -3,6 +3,8 @@
 Standalone login-slip generator with a Google Apps Script + Google Sheets cloud backend for cross-device use.
 
 ## Features
+- First-run app password setup; password-change panel (server-side salted hash)
+- QR code on each printed slip that opens the configured portal URL
 - Paste data from Excel/Google Sheets (Username, Password, Class, Student name optional)
 - Cloud save/load across devices signed into the authorized Google account
 - A4 portrait default 4 × 5 (20 slips per page)
@@ -18,7 +20,9 @@ Standalone login-slip generator with a Google Apps Script + Google Sheets cloud 
 6. Set **Execute as: Me** and **Who has access: Only myself**. Do not choose public access: this app stores passwords.
 7. Deploy and authorize the script when Google prompts you. Keep the deployment URL private.
 8. Open the deployed URL while signed into the same Google account on each device. The database spreadsheet is created on first run and stored in your Drive.
-9. Paste credentials into the app, choose **Replace loaded data** or **Append rows**, then **Save to Cloud**. On another device choose **Load from Cloud**.
+9. On first visit, create an app-lock password (8+ characters). On later visits, enter it to unlock.
+10. Paste credentials, choose **Replace loaded data** or **Append rows**, then **Save to Cloud**. On another device choose **Load from Cloud**.
+11. Change the app-lock password from the dedicated password management section when needed. Printed slips include a QR code for the configured portal URL.
 
 ## Privacy and security
 - The cloud spreadsheet stores the credentials in plaintext because slips must print the actual passwords. Restrict its sharing and never make it public.
